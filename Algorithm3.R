@@ -1,26 +1,29 @@
 #Author: Annabell Kuldmaa
+
+#If running code following libraries must be installed
 library("caret")
 library("caTools")
 
+#Change working directory according to your file system
 setwd("E:/Users/AnnabellK/Desktop/Spring2016/GameTheory/RepeatedGames")
 
 #Loading data
 game2= (read.table("game_2.txt"))
 game1= (read.table("game_1.txt"))
 
-#Calculate Q values for all
+#Calculate Q values for all players
 calculateQValues <- function(gameData, gameNum, alpha, k){
   #Game2
   if(gameNum==2){
   payoffRowPlayer = matrix(c(3,1,1,2), nrow=2,ncol=2,byrow = TRUE)
   payoffColumnPlayer = matrix(c(1,3,2,1),nrow=2,ncol=2,byrow = TRUE)
-  NE <- 1.67 #expected payoffif playing MSNE
+  NE <- 1.67 #expected payoff if playing MSNE
   }
   #Game1
   else{
   payoffRowPlayer = matrix(c(1,0,2,2,1,0,0,2,1), nrow=3,ncol=3,byrow = TRUE)
   payoffColumnPlayer = matrix(c(1,2,0,0,1,2,2,0,1), nrow=3,ncol=3,byrow = TRUE)
-  NE <- 1 #expected payoffif playing MSNE
+  NE <- 1 #expected payoff if playing MSNE
   }
   for(i in seq(1, 50, by=2)){
     if(gameNum==2){
@@ -56,6 +59,7 @@ calculateQValues <- function(gameData, gameNum, alpha, k){
 }
 
 calculateQ <- function(otherPlayer, payoffRow, payoffColumn, otherIsColumn,NE, k){
+  #We hold alpha constant at 0.8
   alpha<-0.8
   if(length(payoffRow) == 4){
     maxSample <- 1
@@ -77,7 +81,7 @@ calculateQ <- function(otherPlayer, payoffRow, payoffColumn, otherIsColumn,NE, k
       a<- otherPlayer[,j+1]
       ra <- payoffColumn[a+1,][b+1]
     }
-    Q[a+1,][b+1] <- (1-alpha)*Q[a+1,][b+1] + alpha*(ra + NE)#FIXME
+    Q[a+1,][b+1] <- (1-alpha)*Q[a+1,][b+1] + alpha*(ra + NE)
   }
   return(Q)
 }
@@ -281,16 +285,16 @@ estimate <- function(gameData, gameNum){
 
 #Just for for testing
 #Game  1
-for (k in 1:10){
-  res <- estimateRounds(game1,1)
-  print(calculateAccuracy(game1, 1, res))
-}
+#for (k in 1:10){
+#  res <- estimateRounds(game1,1)
+#  print(calculateAccuracy(game1, 1, res))
+#}
 
 #Game 2
-for (k in 1:10){
-  res <- estimateRounds(game2,2)
-  print(calculateAccuracy(game2, 2, res))
-}
+#for (k in 1:10){
+#  res <- estimateRounds(game2,2)
+#  print(calculateAccuracy(game2, 2, res))
+#}
 
 
 #Calculating final
